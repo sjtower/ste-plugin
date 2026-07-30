@@ -1,0 +1,11 @@
+{
+  "name": "ste-check",
+  "version": "0.1.0",
+  "description": "Deterministic Simplified Technical English checker for technical documentation",
+  "bin": { "ste-check": "./scripts/ste-check.js" },
+  "main": "./scripts/ste-check.js",
+  "scripts": { "test": "node tests/run.js" },
+  "license": "MIT",
+  "engines": { "node": ">=18" },
+  "files": ["scripts/", "README.md", "LICENSE"]
+}
