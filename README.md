@@ -45,8 +45,8 @@ command. Those are the cases where STE removes something you need. `strict`
 drops the exemptions.
 
 One rule outranks every limit: **never drop a technical fact to meet a word
-count.** If a 25-word sentence would be ambiguous or would omit a qualifier
-that changes the meaning, the complete statement wins.
+count.** A 25-word sentence can be ambiguous. It can also omit a qualifier that
+changes the meaning. In both cases the complete statement wins.
 
 ### Cost
 
