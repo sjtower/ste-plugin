@@ -1,7 +1,33 @@
 {
   "name": "ste",
-  "description": "Write and check technical documentation against ASD-STE100 Simplified Technical English. On-demand skill, deterministic checker, and repo integration. Unofficial; not affiliated with ASD.",
-  "version": "0.1.0",
+  "description": "Write and check technical documentation against ASD-STE100 Simplified Technical English. Always-on writing mode, deterministic checker, and repo integration. Unofficial; not affiliated with ASD.",
+  "version": "0.2.0",
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/ste-activate.js\"",
+            "timeout": 5,
+            "statusMessage": "Loading Simplified Technical English..."
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/ste-reminder.js\"",
+            "timeout": 5,
+            "statusMessage": "Applying STE..."
+          }
+        ]
+      }
+    ]
+  },
   "author": {
     "name": "Simon Tower",
     "url": "https://github.com/sjtower"

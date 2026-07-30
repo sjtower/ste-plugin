@@ -19,7 +19,52 @@ easier to parse.
 | `/ste-check` | Runs the deterministic checker on changed markdown and reports findings. |
 | `/ste-rewrite` | Rewrites a file or pasted text into STE, with a before-and-after table. |
 | `/ste-init` | Adds an STE rule to a repo's `CLAUDE.md` so every agent follows it. |
+| `/ste-mode` | Switches the always-on mode: `off`, `prose`, or `strict`. |
 | `scripts/ste-check.js` | Zero-dependency Node checker. Use it in CI. |
+
+## Always-on mode
+
+The plugin writes in STE from the first response. It does not write ordinary
+prose and then rewrite it. A `SessionStart` hook injects the rules before
+Claude writes anything, and a one-line `UserPromptSubmit` hook stops the style
+from drifting back over a long session.
+
+| Mode | Effect |
+| --- | --- |
+| `prose` | **Default.** STE for explanatory prose and documentation. |
+| `strict` | STE for everything, including commit messages and code comments. |
+| `off` | No always-on behaviour. The skill and commands still work on demand. |
+
+```bash
+/ste-mode off      # or: prose, strict, status
+```
+
+`prose` exempts code, code comments that explain intent, commit messages, PR
+descriptions, design rationale, and any exact quoted error, identifier, or
+command. Those are the cases where STE removes something you need. `strict`
+drops the exemptions.
+
+One rule outranks every limit: **never drop a technical fact to meet a word
+count.** If a 25-word sentence would be ambiguous or would omit a qualifier
+that changes the meaning, the complete statement wins.
+
+### Cost
+
+| | Tokens |
+| --- | --- |
+| Rule block, once per session | ~744 |
+| Reminder line, per prompt | ~91 |
+
+The rule block is deliberately not a two-line summary. A short reminder is the
+first thing context compression discards, and the style then reverts to
+ordinary prose part-way through a session.
+
+`STE_MODE` in the environment overrides the mode file, which is useful for CI
+and for one-off shells:
+
+```bash
+STE_MODE=off claude
+```
 
 ## Install
 
@@ -149,9 +194,15 @@ broadest one.
 
 STE is the exact inverse of compression styles such as
 [caveman](https://github.com/JuliusBrussee/caveman): STE requires articles and
-complete sentences, caveman removes them. Do not run an always-on compression
-mode and STE at the same time. This plugin stays on demand so that the two can
-live in the same install without a conflict.
+complete sentences, caveman removes them. Both inject a `SessionStart` rule
+block, so running both at once gives the model contradictory instructions.
+
+Disable one of them:
+
+```bash
+claude plugin disable caveman@caveman
+/ste-mode off
+```
 
 ## Prior art
 

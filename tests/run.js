@@ -175,6 +175,63 @@ test('findings are sorted by line', () => {
   }
 });
 
+/* ------------------------------------------------------------------ hooks */
+
+const { execFileSync } = require('child_process');
+const hook = (name, env) => execFileSync('node', [path.join(__dirname, '..', 'hooks', name)], {
+  encoding: 'utf8',
+  env: { ...process.env, ...env },
+});
+
+test('activate hook emits the ruleset in prose mode', () => {
+  const out = hook('ste-activate.js', { STE_MODE: 'prose' });
+  assert.ok(/SIMPLIFIED TECHNICAL ENGLISH ACTIVE/.test(out), 'no activation banner');
+  assert.ok(/mode: prose/.test(out), 'mode not reported');
+  assert.ok(/20 words or fewer/.test(out), 'sentence limit missing');
+  assert.ok(/Do NOT apply STE to/.test(out), 'carve-outs missing in prose mode');
+});
+
+test('activate hook drops the carve-outs in strict mode', () => {
+  const out = hook('ste-activate.js', { STE_MODE: 'strict' });
+  assert.ok(/mode: strict/.test(out), 'mode not reported');
+  assert.ok(/STRICT mode/.test(out), 'strict note missing');
+  assert.ok(!/Do NOT apply STE to/.test(out), 'prose carve-outs leaked into strict');
+});
+
+test('activate hook stays silent when off', () => {
+  const out = hook('ste-activate.js', { STE_MODE: 'off' });
+  assert.strictEqual(out.trim(), 'OK', `expected bare OK, got: ${out.slice(0, 60)}`);
+});
+
+test('reminder hook emits one line when active', () => {
+  const out = hook('ste-reminder.js', { STE_MODE: 'prose' });
+  assert.ok(/STE ACTIVE \(prose\)/.test(out), 'no reminder');
+  assert.strictEqual(out.split('\n').length, 1, 'reminder must be a single line');
+});
+
+test('reminder hook stays silent when off', () => {
+  assert.strictEqual(hook('ste-reminder.js', { STE_MODE: 'off' }).trim(), '', 'expected no output');
+});
+
+test('an unknown STE_MODE falls back to the default', () => {
+  const out = hook('ste-activate.js', { STE_MODE: 'banana' });
+  assert.ok(/mode: prose/.test(out), 'bad mode did not fall back to prose');
+});
+
+test('hooks never exit non-zero', () => {
+  for (const name of ['ste-activate.js', 'ste-reminder.js']) {
+    for (const mode of ['off', 'prose', 'strict', 'nonsense']) {
+      hook(name, { STE_MODE: mode }); // execFileSync throws on non-zero exit
+    }
+  }
+});
+
+test('the ruleset stays within a sane token budget', () => {
+  const out = hook('ste-activate.js', { STE_MODE: 'prose' });
+  const approxTokens = Math.ceil(out.length / 4);
+  assert.ok(approxTokens < 900, `ruleset is ~${approxTokens} tokens; keep it under 900`);
+});
+
 /* ---------------------------------------------------------------- summary */
 
 process.stdout.write(`\n${passed} passed, ${failed} failed\n`);
