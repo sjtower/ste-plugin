@@ -158,6 +158,17 @@ test('ste-check:ignore suppresses the next line only', () => {
   assert.strictEqual(hits.length, 1, `expected 1 finding, got ${hits.length}`);
 });
 
+test('a word inside a matched phrase is not reported twice', () => {
+  const hits = byRule(analyze('Work in close proximity to the panel.\n', opts), 'word-choice');
+  assert.strictEqual(hits.length, 1, `expected 1 finding, got ${hits.length}: ${JSON.stringify(hits.map((h) => h.message))}`);
+  assert.ok(/in close proximity to/.test(hits[0].message), 'expected the phrase finding to win');
+});
+
+test('a word outside any phrase is still reported', () => {
+  const hits = byRule(analyze('Check the proximity of the panel.\n', opts), 'word-choice');
+  assert.strictEqual(hits.length, 1, `expected 1 finding, got ${hits.length}`);
+});
+
 test('findings are sorted by line', () => {
   for (let i = 1; i < v.length; i++) {
     assert.ok(v[i].line >= v[i - 1].line, `out of order at index ${i}`);

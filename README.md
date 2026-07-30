@@ -24,7 +24,7 @@ easier to parse.
 ## Install
 
 ```bash
-/plugin marketplace add simontower/ste-plugin
+/plugin marketplace add sjtower/ste-plugin
 ```
 
 Then install the `ste` plugin from the marketplace.

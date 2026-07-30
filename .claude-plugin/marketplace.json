@@ -4,7 +4,7 @@
   "description": "ASD-STE100 Simplified Technical English for Claude Code: write, rewrite, and check technical documentation in a controlled language built for non-native readers.",
   "owner": {
     "name": "Simon Tower",
-    "url": "https://github.com/simontower"
+    "url": "https://github.com/sjtower"
   },
   "plugins": [
     {

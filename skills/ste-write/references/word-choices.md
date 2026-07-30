@@ -43,6 +43,39 @@ checker.** Register for a free copy of the specification at
 | take into consideration | consider |
 | on a regular basis | regularly |
 | as a means of | to |
+| in spite of the fact that | although |
+| despite the fact that | although |
+| in view of the fact that | because |
+| on the grounds that | because |
+| for the reason that | because |
+| as a consequence of | because of |
+| until such time as | until |
+| in the majority of cases | usually |
+| in many cases | often |
+| at all times | always |
+| in the near future | soon |
+| at an early date | soon |
+| by means of | by |
+| in relation to | about |
+| with regard to | about |
+| with respect to | about |
+| in close proximity to | near |
+| in the absence of | without |
+| a sufficient number of | enough |
+| of the order of | about |
+| not later than | before |
+| provide assistance to | help |
+| give consideration to | consider |
+| make an adjustment to | adjust |
+| perform an examination of | examine |
+| conduct an investigation of | investigate |
+| come to a conclusion | conclude |
+| have an effect on | affect |
+| in an effort to | to |
+| the reason why is that | because |
+| it should be noted that | _remove the phrase_ |
+| it is recommended that | we recommend |
+| in the process of | _remove the phrase_ |
 
 ## Wordy single words
 
@@ -80,6 +113,54 @@ checker.** Register for a free copy of the specification at
 | aforementioned | this |
 | modification | change |
 | functionality | function |
+| ameliorate | improve |
+| anticipate | expect |
+| cease | stop |
+| commencement | start |
+| constitute | form |
+| deem | think |
+| delineate | describe |
+| disseminate | send |
+| elucidate | explain |
+| evident | clear |
+| exhibit | show |
+| expedite | hurry |
+| fabricate | make |
+| finalize, finalise | finish |
+| furnish | give |
+| identical | the same |
+| inception | start |
+| incorporate | include |
+| inform | tell |
+| inquire | ask |
+| locate | find |
+| magnitude | size |
+| majority | most |
+| manufacture | make |
+| minimize, minimise | reduce |
+| necessitate | need |
+| notify | tell |
+| objective | goal |
+| optimum | best |
+| permit | let |
+| personnel | people |
+| portion | part |
+| procure | get |
+| prohibit | prevent |
+| proximity | nearness |
+| rectify | correct |
+| reimburse | repay |
+| remainder | rest |
+| retain | keep |
+| signify | mean |
+| solicit | ask for |
+| substantial | large |
+| termination | end |
+| transmit | send |
+| transpire | happen |
+| utilization, utilisation | use |
+| whilst | while |
+| amongst | among |
 
 ## Software-domain notes
 

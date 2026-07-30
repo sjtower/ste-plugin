@@ -150,6 +150,57 @@ const WORD_CHOICES = new Map(Object.entries({
   'functionality': 'function',
   'leverage': 'use',
   'aforementioned': 'this',
+  'ameliorate': 'improve',
+  'anticipate': 'expect',
+  'cease': 'stop',
+  'commencement': 'start',
+  'deem': 'think',
+  'delineate': 'describe',
+  'disseminate': 'send',
+  'elucidate': 'explain',
+  'expedite': 'hurry',
+  'fabricate': 'make',
+  'finalize': 'finish',
+  'finalise': 'finish',
+  'furnish': 'give',
+  'identical': 'the same',
+  'inception': 'start',
+  'incorporate': 'include',
+  'inform': 'tell',
+  'inquire': 'ask',
+  'locate': 'find',
+  'magnitude': 'size',
+  'majority': 'most',
+  'manufacture': 'make',
+  'minimize': 'reduce',
+  'minimise': 'reduce',
+  'necessitate': 'need',
+  'notify': 'tell',
+  'objective': 'goal',
+  'optimum': 'best',
+  'permit': 'let',
+  'personnel': 'people',
+  'portion': 'part',
+  'procure': 'get',
+  'prohibit': 'prevent',
+  'proximity': 'nearness',
+  'rectify': 'correct',
+  'reimburse': 'repay',
+  'remainder': 'rest',
+  'retain': 'keep',
+  'signify': 'mean',
+  'solicit': 'ask for',
+  'substantial': 'large',
+  'termination': 'end',
+  'transmit': 'send',
+  'transpire': 'happen',
+  'utilization': 'use',
+  'utilisation': 'use',
+  'whilst': 'while',
+  'amongst': 'among',
+  'evident': 'clear',
+  'exhibit': 'show',
+  'constitute': 'form',
 }));
 
 /** Multi-word wordy phrases. Checked before single words. */
@@ -180,6 +231,39 @@ const PHRASE_CHOICES = new Map(Object.entries({
   'as a means of': 'to',
   'take into consideration': 'consider',
   'on a regular basis': 'regularly',
+  'in spite of the fact that': 'although',
+  'despite the fact that': 'although',
+  'in view of the fact that': 'because',
+  'on the grounds that': 'because',
+  'for the reason that': 'because',
+  'as a consequence of': 'because of',
+  'until such time as': 'until',
+  'in the majority of cases': 'usually',
+  'in many cases': 'often',
+  'at all times': 'always',
+  'in the near future': 'soon',
+  'at an early date': 'soon',
+  'by means of': 'by',
+  'in relation to': 'about',
+  'with regard to': 'about',
+  'with respect to': 'about',
+  'in close proximity to': 'near',
+  'in the absence of': 'without',
+  'a sufficient number of': 'enough',
+  'of the order of': 'about',
+  'not later than': 'before',
+  'provide assistance to': 'help',
+  'give consideration to': 'consider',
+  'make an adjustment to': 'adjust',
+  'perform an examination of': 'examine',
+  'conduct an investigation of': 'investigate',
+  'come to a conclusion': 'conclude',
+  'have an effect on': 'affect',
+  'it should be noted that': 'remove this phrase',
+  'it is recommended that': 'we recommend',
+  'in an effort to': 'to',
+  'in the process of': 'remove this phrase',
+  'the reason why is that': 'because',
 }));
 
 const CONTRACTIONS = /\b(?:can't|won't|don't|doesn't|didn't|isn't|aren't|wasn't|weren't|hasn't|haven't|hadn't|shouldn't|wouldn't|couldn't|mustn't|it's|that's|there's|you're|we're|they're|i'm|let's|you'll|we'll|they'll|you've|we've|they've|i've)\b/gi;
@@ -461,6 +545,7 @@ function checkNounCluster(sentence, ctx, opts, push) {
 function checkWordChoice(sentence, ctx, opts, push) {
   const body = stripBlockMarkers(sentence.text);
   const lower = body.toLowerCase();
+  const phraseSpans = [];
 
   for (const [phrase, better] of PHRASE_CHOICES) {
     let idx = lower.indexOf(phrase);
@@ -468,6 +553,7 @@ function checkWordChoice(sentence, ctx, opts, push) {
       const before = lower[idx - 1];
       const after = lower[idx + phrase.length];
       if ((!before || !/\w/.test(before)) && (!after || !/\w/.test(after))) {
+        phraseSpans.push([idx, idx + phrase.length]);
         push({
           rule: 'word-choice',
           severity: 'warn',
@@ -486,6 +572,8 @@ function checkWordChoice(sentence, ctx, opts, push) {
   while ((m = re.exec(body)) !== null) {
     const better = WORD_CHOICES.get(m[1].toLowerCase());
     if (!better) continue;
+    // A phrase finding already covers this span; do not report it twice.
+    if (phraseSpans.some(([a, b]) => m.index >= a && m.index < b)) continue;
     push({
       rule: 'word-choice',
       severity: 'warn',
